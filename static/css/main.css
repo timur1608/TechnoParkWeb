@@ -1,0 +1,42 @@
+main > .container {
+    padding: 60px 15px 0;
+}
+
+.question {
+    border: 1px solid gray;
+    margin-top: 30px;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.question-image {
+    max-width: 150px;
+    max-height: 150px;
+}
+.divider{
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+.question-title {
+    font-size: 30px;
+    font-family: Helvetica;
+    font-weight: bold;
+}
+
+.tags{
+    max-width: 150px;
+    font-size: 20px;
+}
+
+.header-image{
+    max-width: 50px;
+    max-height: 50px;
+}
+.header-text{
+    color:white;
+    margin-bottom:0.5rem;
+}
+.col-05{
+    width:5%;
+    flex: 0 0 auto;
+}
