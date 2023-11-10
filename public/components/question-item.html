@@ -1,0 +1,38 @@
+{% load static %}
+
+<div class="row question">
+    <div class="col-3">
+        <img src="{% static '/img/css_ava.jpg' %}" alt="" class="question-image">
+        <div class="overflow-hidden bg-white shadow-md rounded-2xl mt-1 items-center d-inline-block d-flex justify-content-center me-5">
+            <div class="flex flex-col justify-center items-center">
+                <button class="cursor-pointer text-success">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0"
+                         viewBox="0 0 320 512" height="20" width="20">
+                        <path d="M288.662 352H31.338c-17.818 0-26.741-21.543-14.142-34.142l128.662-128.662c7.81-7.81 20.474-7.81 28.284 0l128.662 128.662c12.6 12.599 3.676 34.142-14.142 34.142z"></path>
+                    </svg>
+                </button>
+                <span class="h-4 flex items-center justify-center">2</span>
+                <button class="cursor-pointer text-success">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0"
+                         viewBox="0 0 320 512" height="20" width="20">
+                        <path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="question-title"><a href="{% url 'question' question.id %}">{{ question.title }}</a></div>
+        <div class="question-text">
+            {{ question.content }}
+        </div>
+        <div class="d-inline-block align-bottom mb-1">
+            <a href="">Answers(2)</a>
+        </div>
+        <div class="d-inline-block float-end">
+            Tags:
+            <a href="">dz1</a>
+            <a href="">lorem</a>
+        </div>
+    </div>
+</div>
