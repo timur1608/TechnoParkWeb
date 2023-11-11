@@ -30,8 +30,12 @@ def signup(request):
 def login(request):
     return render(request, template_name='login.html')
 
-def tag(request):
-    return render(request, template_name='tag.html')
+def tag(request, label):
+    #item = request.GET.get()
+    return render(request, template_name='tag.html', context={'questions': paginate(QUESTIONS, 1), 'tag': label})
 
 def settings(request):
     return render(request, template_name='settings.html')
+
+def hot(request):
+    return render(request, template_name='hot.html', context={'questions': paginate(QUESTIONS, 1)})

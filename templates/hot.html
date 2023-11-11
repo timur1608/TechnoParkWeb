@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="d-inline-block">
+    <h1>Hot Questions</h1>
+</div>
+{% for question in questions %}
+
+{% include 'components/question-item.html' %}
+
+{% endfor %}
+
+{% endblock %}
