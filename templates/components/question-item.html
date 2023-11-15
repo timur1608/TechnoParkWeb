@@ -31,8 +31,8 @@
         </div>
         <div class="d-inline-block float-end">
             Tags:
-            <a href="">dz1</a>
-            <a href="">lorem</a>
+            <a href="{% url 'tag' question.tags.0 %}">{{ question.tags.0 }}</a>
+            <a href="{% url 'tag' question.tags.1 %}">{{ question.tags.1 }}</a>
         </div>
     </div>
 </div>

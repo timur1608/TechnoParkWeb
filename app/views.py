@@ -5,20 +5,21 @@ QUESTIONS = [
     {
         'id': i,
         'title': f"Question {i}",
-        'content': f'Long lorem ipsum {i}'
+        'content': f'Long lorem ipsum {i}',
+        'tags': ['dz1', 'lorem']
     } for i in range(30)
 ]
 
 
-def paginate(objects, page, per_page=10):
+def paginate(objects, request, per_page=10):
     paginator = Paginator(objects, per_page)
-    return paginator.page(page)
-
-
+    page = request.GET.get('page', 1)
+    if str(page).isdigit() and int(page) <= int(len(QUESTIONS) / per_page):
+        return paginator.page(page)
+    return paginator.page(1)
 # Create your views here.
 def index(request):
-    page = request.GET.get('page', 1)
-    return render(request, template_name='index.html', context={'questions': paginate(QUESTIONS, page)})
+    return render(request, template_name='index.html', context={'questions': paginate(QUESTIONS, request)})
 
 
 def question(request, question_id):
@@ -42,7 +43,7 @@ def login(request):
 
 
 def tag(request, label):
-    return render(request, template_name='tag.html', context={'questions': paginate(QUESTIONS, 1), 'tag': label})
+    return render(request, template_name='tag.html', context={'questions': paginate(QUESTIONS, request), 'tag': label})
 
 
 def settings(request):
