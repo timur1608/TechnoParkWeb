@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from app.models import Profile, Question
 
 QUESTIONS = [
     {
         'id': i,
         'title': f"Question {i}",
-        'content': f'Long lorem ipsum {i}',
+        'text': f'Long lorem ipsum {i}',
         'tags': ['dz1', 'lorem']
     } for i in range(30)
 ]
@@ -18,12 +19,14 @@ def paginate(objects, request, per_page=10):
         return paginator.page(page)
     return paginator.page(1)
 # Create your views here.
+
 def index(request):
-    return render(request, template_name='index.html', context={'questions': paginate(QUESTIONS, request)})
+    questions = Question.objects.all()
+    return render(request, template_name='index.html', context={'questions': paginate(questions, request)})
 
 
 def question(request, question_id):
-    item = QUESTIONS[question_id]
+    item = Question.objects.match(question_id)[0]
     return render(request, template_name='question.html', context={'question': item})
 
 

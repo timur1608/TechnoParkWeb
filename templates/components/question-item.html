@@ -22,17 +22,18 @@
         </div>
     </div>
     <div class="col-9">
-        <div class="question-title"><a href="{% url 'question' question.id %}">{{ question.title }}</a></div>
+        <div class="question-title"><a href="{% url 'question' question.id %}">{{ question.topic }}</a></div>
         <div class="question-text">
-            {{ question.content }}
+            {{ question.text }}
         </div>
         <div class="d-inline-block align-bottom mb-1">
             <a href="">Answers(2)</a>
         </div>
         <div class="d-inline-block float-end">
             Tags:
-            <a href="{% url 'tag' question.tags.0 %}">{{ question.tags.0 }}</a>
-            <a href="{% url 'tag' question.tags.1 %}">{{ question.tags.1 }}</a>
+            {% for tag in question.tags.all %}
+            <a href="{% url 'tag' tag.label %}">{{ tag.label }}</a>
+            {% endfor %}
         </div>
     </div>
 </div>
