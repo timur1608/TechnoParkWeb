@@ -13,13 +13,19 @@ class QuestionManager(models.Manager):
         return self.filter(id=question_id)
 
     def top5(self):
-        set_of_lens = set()
-        result = 0
-        for i in self.all():
-            set_of_lens.add(len(i.answers.all()))
-        lst = list(set_of_lens)
+        dicts_of_questions = dict()
+        result = []
+        for i in Answer.objects.all():
+            if (dicts_of_questions.get(i.question, 0) == 0):
+                dicts_of_questions[i.question] = 0
+            dicts_of_questions[i.question] += 1
+        result = [i[0] for i in sorted(dicts_of_questions.items(), key=lambda x: x[1], reverse=True)]
+        return result[:5]
 
-        return self.filter(len())
+
+    def tag_questions(self, tag):
+        t = Tag.objects.filter(label=tag)
+        return t
 
 
 class Question(models.Model):
@@ -27,7 +33,6 @@ class Question(models.Model):
     text = models.TextField()
     author = models.ForeignKey('Profile', max_length=256, on_delete=models.PROTECT)
     tags = models.ManyToManyField('Tag', related_name='questions')
-    answers = models.ManyToManyField('Answer', related_name='questions')
     date_written = models.DateField()
     objects = QuestionManager()
 
@@ -38,10 +43,8 @@ class Question(models.Model):
 class Answer(models.Model):
     text = models.TextField()
     profile = models.ForeignKey('Profile', max_length=256, on_delete=models.PROTECT)
+    question = models.ForeignKey('Question', max_length=256, on_delete=models.PROTECT)
     is_correct = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.id}'
 
 
 class Tag(models.Model):

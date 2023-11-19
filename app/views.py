@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from app.models import Profile, Question
+from django.http import HttpResponse
 
 QUESTIONS = [
     {
@@ -18,10 +19,12 @@ def paginate(objects, request, per_page=10):
     if str(page).isdigit() and int(page) <= int(len(QUESTIONS) / per_page):
         return paginator.page(page)
     return paginator.page(1)
+
+
 # Create your views here.
 
 def index(request):
-    questions = Question.objects.all()
+    questions = Question.objects.order_by("date_written")
     return render(request, template_name='index.html', context={'questions': paginate(questions, request)})
 
 
@@ -46,7 +49,12 @@ def login(request):
 
 
 def tag(request, label):
-    return render(request, template_name='tag.html', context={'questions': paginate(QUESTIONS, request), 'tag': label})
+    questions = Question.objects.tag_questions(label)
+    if (len(questions) == 0):
+        return render(request, '404.html', status=404)
+    else:
+        return render(request, template_name='tag.html',
+                      context={'questions': paginate(questions[0].questions.all(), request), 'tag': label})
 
 
 def settings(request):
@@ -55,4 +63,5 @@ def settings(request):
 
 
 def hot(request):
-    return render(request, template_name='hot.html', context={'questions': paginate(QUESTIONS, 1)})
+    questions = Question.objects.top5()
+    return render(request, template_name='hot.html', context={'questions': paginate(questions, request)})
