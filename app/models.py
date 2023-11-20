@@ -4,30 +4,37 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class LikeManager(models.Manager):
-    def countLikesOfQuestions(self, question_id):
+
+    def countQuestions(self, questions):
+        questionsLikes = list()
+        for i in questions:
+            count = self.countQuestion(i.id)
+            i.count = count
+            questionsLikes.append(i)
+        return questionsLikes
+
+    def countAnswers(self, answers):
+        answersLikes = list()
+        for i in answers:
+            count = self.countAnswer(i.id)
+            i.count = count
+            answersLikes.append(i)
+        return answersLikes
+
+    def countQuestion(self, question_id):
         count = 0
         likes = Like.objects.all()
-        dislikes = DisLike.objects.all()
         for i in likes:
-            if i.questions.get(question_id, 0):
-                count += 1
-        for i in dislikes:
-            if i.question.get(question_id, 0):
-                count -= 1
+            if i.question and i.question.id == question_id:
+                count += 1 * int(i.value)
         return count
 
-    def countLikesOfAnswers(self, answer_id):
+    def countAnswer(self, answer_id):
         count = 0
         likes = Like.objects.all()
-        dislikes = DisLike.objects.all()
         for i in likes:
-            if i.answers.get(answer_id, 0):
-                count += 1
-        for i in dislikes:
-            if i.answers.get(answer_id, 0):
-                count -= 1
-        return count
-
+            if i.answer and i.answer.id == answer_id:
+                count += 1 * int(i.value)
         return count
 
 
@@ -89,14 +96,8 @@ class Profile(models.Model):
 
 
 class Like(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, null=True)
-    answers = models.ManyToManyField('Answer', related_name='like', blank=True, null=True)
-    questions = models.ManyToManyField('Question', related_name='like', blank=True, null=True)
-    objects = LikeManager()
-
-
-class DisLike(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, null=True)
-    answers = models.ManyToManyField('Answer', related_name='dislike', blank=True, null=True)
-    questions = models.ManyToManyField('Question', related_name='dislike', blank=True, null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
+    question = models.ForeignKey('Question', related_name='like', blank=True, null=True, on_delete=models.PROTECT)
+    answer = models.ForeignKey('Answer', related_name='like', blank=True, null=True, on_delete=models.PROTECT)
+    value = models.CharField(max_length=2, blank=True, null=True)
     objects = LikeManager()

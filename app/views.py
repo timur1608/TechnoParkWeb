@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from app.models import Profile, Question
+from app.models import Profile, Question, Like
 
 
 def paginate(objects, request, per_page=10):
@@ -15,15 +15,18 @@ def paginate(objects, request, per_page=10):
 
 def index(request):
     questions = Question.objects.order_by("date_written")
-    return render(request, template_name='index.html', context={'questions': paginate(questions, request)})
+    mapQuestions = Like.objects.countQuestions(questions)
+    return render(request, template_name='index.html', context={'questions': paginate(mapQuestions, request)})
 
 
 def question(request, question_id):
-    item = Question.objects.match(question_id)[0]
     answers = Question.objects.get_answers(question_id)
-    count = 0
+    mapQuestion = Like.objects.countQuestions(Question.objects.match(question_id))
+    if not mapQuestion:
+        return render(request, '404.html', status=404)
+    mapAnswers = Like.objects.countAnswers(answers)
     return render(request, template_name='question.html',
-                  context={'question': item, 'answers': answers, 'count': count})
+                  context={'question': mapQuestion[0], 'answers': mapAnswers})
 
 
 def ask(request):
@@ -44,9 +47,9 @@ def tag(request, label):
     questions = Question.objects.tag_questions(label)
     if (len(questions) == 0):
         return render(request, '404.html', status=404)
-    else:
-        return render(request, template_name='tag.html',
-                      context={'questions': paginate(questions[0].questions.all(), request), 'tag': label})
+    mapQuestions = Like.objects.countQuestions(questions[0].questions.all())
+    return render(request, template_name='tag.html',
+                  context={'questions': paginate(mapQuestions, request), 'tag': label})
 
 
 def settings(request):
@@ -56,4 +59,5 @@ def settings(request):
 
 def hot(request):
     questions = Question.objects.top5()
-    return render(request, template_name='hot.html', context={'questions': paginate(questions, request)})
+    mapQuestions = Like.objects.countQuestions(questions)
+    return render(request, template_name='hot.html', context={'questions': paginate(mapQuestions, request)})
