@@ -22,18 +22,13 @@
         </div>
     </div>
     <div class="col-9">
-        <div class="question-title"><a href="{% url 'question' question.id %}">{{ question.topic }}</a></div>
-        <div class="question-text">
-            {{ question.text }}
+        <div class="question-text"> {{ answer.text }}
         </div>
-        <div class="d-inline-block align-bottom mb-1">
-            <a href="">Answers(2)</a>
-        </div>
-        <div class="d-inline-block float-end">
-            Tags:
-            {% for tag in question.tags.all %}
-            <a href="{% url 'tag' tag.label %}">{{ tag.label }}</a>
-            {% endfor %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked">
+                Correct
+            </label>
         </div>
     </div>
 </div>

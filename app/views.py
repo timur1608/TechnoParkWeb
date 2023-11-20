@@ -1,22 +1,12 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from app.models import Profile, Question
-from django.http import HttpResponse
-
-QUESTIONS = [
-    {
-        'id': i,
-        'title': f"Question {i}",
-        'text': f'Long lorem ipsum {i}',
-        'tags': ['dz1', 'lorem']
-    } for i in range(30)
-]
 
 
 def paginate(objects, request, per_page=10):
     paginator = Paginator(objects, per_page)
     page = request.GET.get('page', 1)
-    if str(page).isdigit() and int(page) <= int(len(QUESTIONS) / per_page):
+    if str(page).isdigit() and int(page) <= int(len(objects) / per_page):
         return paginator.page(page)
     return paginator.page(1)
 
@@ -30,7 +20,10 @@ def index(request):
 
 def question(request, question_id):
     item = Question.objects.match(question_id)[0]
-    return render(request, template_name='question.html', context={'question': item})
+    answers = Question.objects.get_answers(question_id)
+    count = 0
+    return render(request, template_name='question.html',
+                  context={'question': item, 'answers': answers, 'count': count})
 
 
 def ask(request):
@@ -39,7 +32,6 @@ def ask(request):
 
 def signup(request):
     items = ['Login', 'Email', 'NickName', 'Password', 'Repeat Password']
-
     return render(request, template_name='signup.html', context={'blocks': items})
 
 
