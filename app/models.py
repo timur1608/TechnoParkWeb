@@ -88,7 +88,7 @@ class Tag(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=256)
-    birthDate = models.DateField(null=True, blank=True);
+    birthDate = models.DateField(null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):

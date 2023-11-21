@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from app import views
 
+handler404 = 'app.views.pageNotFound'
 urlpatterns = [
     path('', views.index, name='index'),
     path('question/<int:question_id>', views.question, name='question'),

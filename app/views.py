@@ -61,3 +61,6 @@ def hot(request):
     questions = Question.objects.top5()
     mapQuestions = Like.objects.countQuestions(questions)
     return render(request, template_name='hot.html', context={'questions': paginate(mapQuestions, request)})
+
+def pageNotFound(request, exception):
+    return render(request, '404.html', status=404)
