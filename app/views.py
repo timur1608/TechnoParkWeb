@@ -15,8 +15,8 @@ def paginate(objects, request, per_page=10):
 
 def index(request):
     questions = Question.objects.order_by("date_written")
-    mapQuestions = Like.objects.countQuestions(questions)
-    return render(request, template_name='index.html', context={'questions': paginate(mapQuestions, request)})
+    #mapQuestions = Like.objects.countQuestions(questions)
+    return render(request, template_name='index.html', context={'questions': paginate(questions, request)})
 
 
 def question(request, question_id):
