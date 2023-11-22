@@ -3,41 +3,6 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class LikeManager(models.Manager):
-
-    def countQuestions(self, questions):
-        questionsLikes = list()
-        for i in questions:
-            count = self.countQuestion(i.id)
-            i.count = count
-            questionsLikes.append(i)
-        return questionsLikes
-
-    def countAnswers(self, answers):
-        answersLikes = list()
-        for i in answers:
-            count = self.countAnswer(i.id)
-            i.count = count
-            answersLikes.append(i)
-        return answersLikes
-
-    def countQuestion(self, question_id):
-        count = 0
-        likes = Like.objects.all()
-        for i in likes:
-            if i.question and i.question.id == question_id:
-                count += 1 * int(i.value)
-        return count
-
-    def countAnswer(self, answer_id):
-        count = 0
-        likes = Like.objects.all()
-        for i in likes:
-            if i.answer and i.answer.id == answer_id:
-                count += 1 * int(i.value)
-        return count
-
-
 class QuestionManager(models.Manager):
     def match(self, question_id):
         return self.filter(id=question_id)
@@ -65,6 +30,8 @@ class Question(models.Model):
     author = models.ForeignKey('Profile', max_length=256, on_delete=models.PROTECT)
     tags = models.ManyToManyField('Tag', related_name='questions')
     date_written = models.DateField()
+    like_count = models.IntegerField(null=True, blank=True, default=0)
+    answers_count = models.IntegerField(null=True, blank=True, default=0)
     objects = QuestionManager()
 
     def __str__(self):
@@ -75,6 +42,7 @@ class Answer(models.Model):
     text = models.TextField()
     profile = models.ForeignKey('Profile', max_length=256, on_delete=models.PROTECT)
     question = models.ForeignKey('Question', max_length=256, on_delete=models.PROTECT)
+    like_count = models.IntegerField(null=True, blank=True, default=0)
     is_correct = models.BooleanField(default=False)
 
 
@@ -100,4 +68,3 @@ class Like(models.Model):
     question = models.ForeignKey('Question', related_name='like', blank=True, null=True, on_delete=models.PROTECT)
     answer = models.ForeignKey('Answer', related_name='like', blank=True, null=True, on_delete=models.PROTECT)
     value = models.CharField(max_length=2, blank=True, null=True)
-    objects = LikeManager()

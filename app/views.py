@@ -15,18 +15,16 @@ def paginate(objects, request, per_page=10):
 
 def index(request):
     questions = Question.objects.order_by("date_written")
-    #mapQuestions = Like.objects.countQuestions(questions)
     return render(request, template_name='index.html', context={'questions': paginate(questions, request)})
 
 
 def question(request, question_id):
     answers = Question.objects.get_answers(question_id)
-    mapQuestion = Like.objects.countQuestions(Question.objects.match(question_id))
-    if not mapQuestion:
+    question = Question.objects.match(question_id)
+    if not question:
         return render(request, '404.html', status=404)
-    mapAnswers = Like.objects.countAnswers(answers)
     return render(request, template_name='question.html',
-                  context={'question': mapQuestion[0], 'answers': mapAnswers})
+                  context={'question': question[0], 'answers': answers})
 
 
 def ask(request):
@@ -47,9 +45,8 @@ def tag(request, label):
     questions = Question.objects.tag_questions(label)
     if (len(questions) == 0):
         return render(request, '404.html', status=404)
-    mapQuestions = Like.objects.countQuestions(questions[0].questions.all())
     return render(request, template_name='tag.html',
-                  context={'questions': paginate(mapQuestions, request), 'tag': label})
+                  context={'questions': paginate(questions[0].questions.all(), request), 'tag': label})
 
 
 def settings(request):
@@ -58,9 +55,9 @@ def settings(request):
 
 
 def hot(request):
-    questions = Question.objects.top5()
-    mapQuestions = Like.objects.countQuestions(questions)
-    return render(request, template_name='hot.html', context={'questions': paginate(mapQuestions, request)})
+    questions = Question.objects.order_by('answers_count').reverse()
+    return render(request, template_name='hot.html', context={'questions': paginate(questions, request)})
+
 
 def pageNotFound(request, exception):
     return render(request, '404.html', status=404)
