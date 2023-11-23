@@ -15,9 +15,9 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         ratio = kwargs['ratio']
         for i in range(ratio):
-            user = User.objects.create_user(f'user{i+1}')
-            profile = Profile(user=user, nickname=f'nickname{i+1}')
-            tag = Tag(label=f'C++{i+1}')
+            user = User.objects.create_user(f'user{i}')
+            profile = Profile(user=user, nickname=f'nickname{i}')
+            tag = Tag(label=f'C++{i}')
             tag.save()
             user.save()
             profile.save()
